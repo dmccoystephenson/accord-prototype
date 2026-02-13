@@ -9,8 +9,11 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ChatWebSocketClient extends WebSocketClient {
+    private static final Logger LOGGER = Logger.getLogger(ChatWebSocketClient.class.getName());
     private static final String CONNECT_FRAME = "CONNECT\naccept-version:1.1,1.0\nheart-beat:10000,10000\n\n\0";
     private static final String SUBSCRIBE_TEMPLATE = "SUBSCRIBE\nid:sub-0\ndestination:/topic/messages\n\n\0";
     private static final String SEND_TEMPLATE = "SEND\ndestination:/app/chat.send\ncontent-type:application/json\n\n%s\0";
@@ -43,13 +46,13 @@ public class ChatWebSocketClient extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        System.out.println("WebSocket connection opened");
+        LOGGER.info("WebSocket connection opened");
         send(CONNECT_FRAME);
     }
 
     @Override
     public void onMessage(String message) {
-        System.out.println("Received: " + message);
+        LOGGER.fine("Received: " + message);
         
         if (message.startsWith("CONNECTED")) {
             connected = true;
@@ -84,14 +87,13 @@ public class ChatWebSocketClient extends WebSocketClient {
                 }
             }
         } catch (Exception e) {
-            System.err.println("Error parsing message: " + e.getMessage());
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error parsing message", e);
         }
     }
 
     public void sendChatMessage(String content) {
         if (!connected) {
-            System.err.println("Cannot send message: Not connected");
+            LOGGER.warning("Cannot send message: Not connected");
             return;
         }
         
@@ -107,15 +109,14 @@ public class ChatWebSocketClient extends WebSocketClient {
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        System.out.println("WebSocket connection closed: " + reason);
+        LOGGER.info("WebSocket connection closed: " + reason);
         connected = false;
         notifyConnectionStatus(false);
     }
 
     @Override
     public void onError(Exception ex) {
-        System.err.println("WebSocket error: " + ex.getMessage());
-        ex.printStackTrace();
+        LOGGER.log(Level.SEVERE, "WebSocket error", ex);
         connected = false;
         notifyConnectionStatus(false);
     }

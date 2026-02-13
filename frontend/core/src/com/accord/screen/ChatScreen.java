@@ -1,6 +1,7 @@
 package com.accord.screen;
 
 import com.accord.AccordGame;
+import com.accord.config.AppConfig;
 import com.accord.websocket.ChatWebSocketClient;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -18,8 +19,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class ChatScreen implements Screen {
+    private static final Logger LOGGER = Logger.getLogger(ChatScreen.class.getName());
+    
     private final AccordGame game;
     private final String username;
     private Stage stage;
@@ -69,6 +73,7 @@ public class ChatScreen implements Screen {
         // Input area
         messageField = new TextField("", skin);
         messageField.setMessageText("Type your message...");
+        messageField.setMaxLength(AppConfig.MAX_MESSAGE_LENGTH);
         
         sendButton = new TextButton("Send", skin);
         sendButton.addListener(new ChangeListener() {
@@ -97,7 +102,10 @@ public class ChatScreen implements Screen {
 
     private void connectWebSocket() {
         try {
-            URI uri = new URI("ws://localhost:8080/ws");
+            String wsUrl = AppConfig.getWebSocketUrl();
+            LOGGER.info("Connecting to WebSocket at: " + wsUrl);
+            
+            URI uri = new URI(wsUrl);
             webSocketClient = new ChatWebSocketClient(uri);
             webSocketClient.setUsername(username);
             
@@ -123,10 +131,14 @@ public class ChatScreen implements Screen {
             
             webSocketClient.connect();
         } catch (Exception e) {
-            System.err.println("Failed to connect to WebSocket: " + e.getMessage());
-            e.printStackTrace();
-            statusLabel.setText("Connection Failed");
-            statusLabel.setColor(Color.RED);
+            String errorMsg = "Failed to connect to WebSocket: " + e.getMessage();
+            LOGGER.severe(errorMsg);
+            Gdx.app.postRunnable(() -> {
+                statusLabel.setText("Connection Failed");
+                statusLabel.setColor(Color.RED);
+                addMessage("System", "Failed to connect to server. Please check your connection.", 
+                          LocalDateTime.now().toString());
+            });
         }
     }
 
@@ -137,8 +149,8 @@ public class ChatScreen implements Screen {
             LocalDateTime dt = LocalDateTime.parse(timestamp);
             timeStr = dt.format(TIME_FORMATTER);
         } catch (Exception e) {
-            // If timestamp parsing fails, use the raw timestamp or current time
-            System.err.println("Failed to parse timestamp: " + timestamp + ", error: " + e.getMessage());
+            // If timestamp parsing fails, log and use current time
+            LOGGER.warning("Failed to parse timestamp: " + timestamp + ", error: " + e.getMessage());
             try {
                 timeStr = LocalDateTime.now().format(TIME_FORMATTER);
             } catch (Exception ex) {
@@ -176,11 +188,20 @@ public class ChatScreen implements Screen {
             return;
         }
         
+        if (message.length() > AppConfig.MAX_MESSAGE_LENGTH) {
+            addMessage("System", "Message too long. Maximum " + AppConfig.MAX_MESSAGE_LENGTH + " characters.", 
+                      LocalDateTime.now().toString());
+            return;
+        }
+        
         if (webSocketClient != null && webSocketClient.isConnected()) {
             webSocketClient.sendChatMessage(message);
             messageField.setText("");
         } else {
-            addMessage("System", "Not connected to server", LocalDateTime.now().toString());
+            statusLabel.setText("Not connected");
+            statusLabel.setColor(Color.RED);
+            addMessage("System", "Not connected to server. Attempting to reconnect...", 
+                      LocalDateTime.now().toString());
         }
     }
 

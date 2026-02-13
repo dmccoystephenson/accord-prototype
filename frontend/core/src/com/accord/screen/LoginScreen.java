@@ -80,6 +80,17 @@ public class LoginScreen implements Screen {
             return;
         }
         
+        if (username.length() > 50) {
+            errorLabel.setText("Username must be 50 characters or less");
+            return;
+        }
+        
+        // Validate allowed characters (alphanumeric and underscore only)
+        if (!username.matches("^[A-Za-z0-9_]+$")) {
+            errorLabel.setText("Username can only contain letters, numbers, and underscores");
+            return;
+        }
+        
         // Navigate to chat screen
         game.setScreen(new ChatScreen(game, username));
     }
