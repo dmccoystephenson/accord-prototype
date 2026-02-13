@@ -64,8 +64,18 @@ nano .env  # or use your preferred editor
 - `SPRING_JPA_HIBERNATE_DDL_AUTO`: Schema generation strategy
 
 #### Backend Connection (for webapp)
-- `ACCORD_BACKEND_URL`: Backend API base URL
-- `ACCORD_BACKEND_WS_URL`: Backend WebSocket URL
+
+**Important**: The webapp uses TWO sets of backend URLs:
+
+1. **Server-side URLs** (webapp server → backend server, internal Docker network):
+   - `ACCORD_BACKEND_URL`: Backend API base URL (default: `http://backend:8080`)
+   - `ACCORD_BACKEND_WS_URL`: Backend WebSocket URL (default: `http://backend:8080/ws`)
+   - Uses Docker service name `backend` for internal communication
+
+2. **Client-side URLs** (browser → backend server, must be publicly accessible):
+   - `ACCORD_BACKEND_CLIENT_URL`: Backend API base URL for browser (default: `http://localhost:8080`)
+   - `ACCORD_BACKEND_CLIENT_WS_URL`: Backend WebSocket URL for browser (default: `http://localhost:8080/ws`)
+   - **Must use `localhost` or your public domain** - browsers cannot resolve Docker service names
 
 ### Example: Custom Ports
 
@@ -78,16 +88,21 @@ SERVER_PORT=9090            # Container port for backend
 WEBAPP_PORT=4000            # Host port for webapp
 WEBAPP_SERVER_PORT=4000     # Container port for webapp
 
-# IMPORTANT: Update backend URLs to match SERVER_PORT
+# Server-side backend URLs (webapp server → backend, internal Docker network)
 ACCORD_BACKEND_URL=http://backend:9090
 ACCORD_BACKEND_WS_URL=http://backend:9090/ws
+
+# Client-side backend URLs (browser → backend, must use localhost or public domain)
+ACCORD_BACKEND_CLIENT_URL=http://localhost:9090
+ACCORD_BACKEND_CLIENT_WS_URL=http://localhost:9090/ws
 ```
 
 **Important Notes:**
 - `BACKEND_PORT` and `SERVER_PORT` should typically be the same for simplicity
 - `WEBAPP_PORT` and `WEBAPP_SERVER_PORT` should typically be the same
-- When changing `SERVER_PORT`, you **must** also update `ACCORD_BACKEND_URL` and `ACCORD_BACKEND_WS_URL`
-- The backend URLs use the internal Docker service name `backend`, not `localhost`
+- When changing `SERVER_PORT`, update BOTH server-side AND client-side backend URLs
+- Server-side URLs use Docker service name `backend`
+- **Client-side URLs must use `localhost` or your public domain** (not `backend`)
 
 Then start the services:
 
@@ -282,6 +297,46 @@ services:
 
 ## Troubleshooting
 
+### Webapp Cannot Connect to Backend
+
+If the web application shows "Could not connect to server" errors:
+
+**Root Cause**: The webapp uses JavaScript in the browser to connect to the backend. Browsers cannot resolve Docker service names like `backend`.
+
+**Solution**: Ensure you're using the client-side URLs (not the server-side URLs):
+
+1. **Check your `.env` file has BOTH URL sets**:
+   ```bash
+   # Server-side URLs (webapp server → backend, internal Docker network)
+   ACCORD_BACKEND_URL=http://backend:8080
+   ACCORD_BACKEND_WS_URL=http://backend:8080/ws
+   
+   # Client-side URLs (browser → backend, must use localhost or public domain)
+   ACCORD_BACKEND_CLIENT_URL=http://localhost:8080
+   ACCORD_BACKEND_CLIENT_WS_URL=http://localhost:8080/ws
+   ```
+
+2. **If using custom ports**, update the client URLs:
+   ```bash
+   # Example with custom port 9090
+   BACKEND_PORT=9090
+   SERVER_PORT=9090
+   ACCORD_BACKEND_CLIENT_URL=http://localhost:9090
+   ACCORD_BACKEND_CLIENT_WS_URL=http://localhost:9090/ws
+   ```
+
+3. **For production with a public domain**:
+   ```bash
+   ACCORD_BACKEND_CLIENT_URL=https://api.yourdomain.com
+   ACCORD_BACKEND_CLIENT_WS_URL=https://api.yourdomain.com/ws
+   ```
+
+4. **Rebuild and restart**:
+   ```bash
+   docker compose down
+   docker compose up -d --build
+   ```
+
 ### Backend Service Hangs or Fails to Start After Changing Ports
 
 If you change ports and the backend service hangs or the health check fails:
@@ -292,6 +347,8 @@ If you change ports and the backend service hangs or the health check fails:
    SERVER_PORT=9090
    ACCORD_BACKEND_URL=http://backend:9090
    ACCORD_BACKEND_WS_URL=http://backend:9090/ws
+   ACCORD_BACKEND_CLIENT_URL=http://localhost:9090
+   ACCORD_BACKEND_CLIENT_WS_URL=http://localhost:9090/ws
    ```
 
 2. **Use matching internal/external ports for simplicity**:

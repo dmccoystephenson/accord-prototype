@@ -8,23 +8,34 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ChatController {
 
+    // Server-side backend URL (used for server-to-server communication)
     @Value("${accord.backend.url:http://localhost:8080}")
     private String backendUrl;
 
-    @Value("${accord.backend.ws.url:ws://localhost:8080/ws}")
+    @Value("${accord.backend.ws.url:http://localhost:8080/ws}")
     private String backendWsUrl;
+
+    // Client-side backend URL (used by browser JavaScript)
+    // This must be accessible from the user's browser, not just from Docker network
+    @Value("${accord.backend.client.url:http://localhost:8080}")
+    private String backendClientUrl;
+
+    @Value("${accord.backend.client.ws.url:http://localhost:8080/ws}")
+    private String backendClientWsUrl;
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("backendUrl", backendUrl);
-        model.addAttribute("backendWsUrl", backendWsUrl);
+        // Use client URLs for browser-side JavaScript
+        model.addAttribute("backendUrl", backendClientUrl);
+        model.addAttribute("backendWsUrl", backendClientWsUrl);
         return "index";
     }
 
     @GetMapping("/chat")
     public String chat(Model model) {
-        model.addAttribute("backendUrl", backendUrl);
-        model.addAttribute("backendWsUrl", backendWsUrl);
+        // Use client URLs for browser-side JavaScript
+        model.addAttribute("backendUrl", backendClientUrl);
+        model.addAttribute("backendWsUrl", backendClientWsUrl);
         return "chat";
     }
 }
