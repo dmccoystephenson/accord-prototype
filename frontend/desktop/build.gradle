@@ -29,6 +29,10 @@ tasks.register('dist', Jar) {
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+    // Include assets from core module in the distribution jar
+    from(project.ext.assetsDir) {
+        into 'assets'
+    }
     with jar
 }
 

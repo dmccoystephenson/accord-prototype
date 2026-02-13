@@ -6,3 +6,5 @@ java {
 }
 
 sourceSets.main.java.srcDirs = [ "src/" ]
+// Add assets directory to resources so they are included in the classpath
+sourceSets.main.resources.srcDirs = [ "assets/" ]

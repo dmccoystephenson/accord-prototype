@@ -49,7 +49,11 @@ public class ChatController {
             throw new IllegalArgumentException("Invalid message content");
         }
         
-        return chatService.saveMessage(username, content);
+        // Trim username and content before saving to ensure consistency
+        String trimmedUsername = username.trim();
+        String trimmedContent = content.trim();
+        
+        return chatService.saveMessage(trimmedUsername, trimmedContent);
     }
 
     @MessageMapping("/chat.join")
@@ -64,7 +68,9 @@ public class ChatController {
             throw new IllegalArgumentException("The 'username' field must be valid");
         }
         
-        return chatService.saveMessage("System", username + " has joined the chat");
+        // Trim username before using in system message
+        String trimmedUsername = username.trim();
+        return chatService.saveMessage("System", trimmedUsername + " has joined the chat");
     }
 }
 

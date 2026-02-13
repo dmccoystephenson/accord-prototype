@@ -65,8 +65,9 @@ services:
       
       # Backend configuration
       # Use service name for internal communication
+      # Note: SockJS requires HTTP(S) URL, not WS URL
       - ACCORD_BACKEND_URL=http://backend:8080
-      - ACCORD_BACKEND_WS_URL=ws://backend:8080/ws
+      - ACCORD_BACKEND_WS_URL=http://backend:8080/ws
     
     depends_on:
       backend:

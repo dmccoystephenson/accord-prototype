@@ -219,7 +219,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        const backendWsUrl = /*[[${backendWsUrl}]]*/ 'ws://localhost:8080/ws';
+        // SockJS requires HTTP(S) URL, not WS URL - SockJS handles WebSocket upgrade internally
+        const backendWsUrl = /*[[${backendWsUrl}]]*/ 'http://localhost:8080/ws';
         const backendUrl = /*[[${backendUrl}]]*/ 'http://localhost:8080';
         
         // Check if user is logged in
