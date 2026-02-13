@@ -37,6 +37,11 @@ public class ChatScreen implements Screen {
     private List<String> messages;
     private static final int MAX_MESSAGES = 100;
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
+    
+    // For tracking consecutive duplicate messages
+    private String lastMessageUsername = null;
+    private String lastMessageContent = null;
+    private int lastMessageCount = 1;
 
     public ChatScreen(final AccordGame game, String username) {
         this.game = game;
@@ -158,12 +163,35 @@ public class ChatScreen implements Screen {
             }
         }
 
-        String formattedMessage = String.format("[%s] %s: %s", timeStr, msgUsername, content);
-        messages.add(formattedMessage);
+        // Check if this is a consecutive duplicate message (same user and same content)
+        boolean isDuplicate = lastMessageUsername != null && 
+                              lastMessageUsername.equals(msgUsername) && 
+                              lastMessageContent != null && 
+                              lastMessageContent.equals(content) &&
+                              !msgUsername.equals("System"); // Don't group system messages
         
-        // Keep only last MAX_MESSAGES
-        if (messages.size() > MAX_MESSAGES) {
-            messages.remove(0);
+        if (isDuplicate && !messages.isEmpty()) {
+            // Update the last message with incremented count
+            lastMessageCount++;
+            String countIndicator = " (x" + lastMessageCount + ")";
+            String updatedMessage = String.format("[%s] %s: %s%s", timeStr, msgUsername, content, countIndicator);
+            
+            // Replace the last message
+            messages.set(messages.size() - 1, updatedMessage);
+        } else {
+            // Add new message
+            String formattedMessage = String.format("[%s] %s: %s", timeStr, msgUsername, content);
+            messages.add(formattedMessage);
+            
+            // Update tracking variables
+            lastMessageUsername = msgUsername;
+            lastMessageContent = content;
+            lastMessageCount = 1;
+            
+            // Keep only last MAX_MESSAGES
+            if (messages.size() > MAX_MESSAGES) {
+                messages.remove(0);
+            }
         }
 
         // Update UI
