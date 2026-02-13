@@ -17,6 +17,7 @@ public class AppConfig {
     // Username Configuration
     public static final int MIN_USERNAME_LENGTH = 3;
     public static final int MAX_USERNAME_LENGTH = 50;
+    public static final String USERNAME_PATTERN = "^[A-Za-z0-9_]+$";
     
     /**
      * Get the WebSocket server URL.

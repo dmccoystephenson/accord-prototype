@@ -2,20 +2,18 @@ package com.accord.controller;
 
 import com.accord.model.User;
 import com.accord.service.UserService;
+import com.accord.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "${app.cors.allowed-origins}")
 public class UserController {
-
-    private static final Pattern USERNAME_PATTERN = Pattern.compile("^[A-Za-z0-9_]+$");
 
     @Value("${app.username.max-length}")
     private int maxUsernameLength;
@@ -30,7 +28,7 @@ public class UserController {
     public ResponseEntity<User> login(@RequestBody Map<String, String> request) {
         String username = request.get("username");
         
-        if (!isValidUsername(username)) {
+        if (!ValidationUtils.isValidUsername(username, minUsernameLength, maxUsernameLength)) {
             return ResponseEntity.badRequest().build();
         }
         
@@ -40,21 +38,10 @@ public class UserController {
 
     @GetMapping("/check/{username}")
     public ResponseEntity<Boolean> checkUsername(@PathVariable String username) {
-        if (!isValidUsername(username)) {
+        if (!ValidationUtils.isValidUsername(username, minUsernameLength, maxUsernameLength)) {
             return ResponseEntity.badRequest().body(false);
         }
         boolean exists = userService.userExists(username.trim());
         return ResponseEntity.ok(exists);
-    }
-
-    private boolean isValidUsername(String username) {
-        if (username == null) {
-            return false;
-        }
-        String trimmed = username.trim();
-        if (trimmed.length() < minUsernameLength || trimmed.length() > maxUsernameLength) {
-            return false;
-        }
-        return USERNAME_PATTERN.matcher(trimmed).matches();
     }
 }

@@ -1,6 +1,7 @@
 package com.accord.screen;
 
 import com.accord.AccordGame;
+import com.accord.config.AppConfig;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -75,18 +76,18 @@ public class LoginScreen implements Screen {
             return;
         }
         
-        if (username.length() < 3) {
-            errorLabel.setText("Username must be at least 3 characters");
+        if (username.length() < AppConfig.MIN_USERNAME_LENGTH) {
+            errorLabel.setText("Username must be at least " + AppConfig.MIN_USERNAME_LENGTH + " characters");
             return;
         }
         
-        if (username.length() > 50) {
-            errorLabel.setText("Username must be 50 characters or less");
+        if (username.length() > AppConfig.MAX_USERNAME_LENGTH) {
+            errorLabel.setText("Username must be " + AppConfig.MAX_USERNAME_LENGTH + " characters or less");
             return;
         }
         
         // Validate allowed characters (alphanumeric and underscore only)
-        if (!username.matches("^[A-Za-z0-9_]+$")) {
+        if (!username.matches(AppConfig.USERNAME_PATTERN)) {
             errorLabel.setText("Username can only contain letters, numbers, and underscores");
             return;
         }

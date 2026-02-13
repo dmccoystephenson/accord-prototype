@@ -2,6 +2,7 @@ package com.accord.controller;
 
 import com.accord.model.ChatMessage;
 import com.accord.service.ChatService;
+import com.accord.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,12 @@ public class ChatController {
     @Value("${app.message.max-length}")
     private int maxMessageLength;
 
+    @Value("${app.username.max-length}")
+    private int maxUsernameLength;
+
+    @Value("${app.username.min-length}")
+    private int minUsernameLength;
+
     @Autowired
     private ChatService chatService;
 
@@ -35,14 +42,11 @@ public class ChatController {
         String username = payload.get("username");
         String content = payload.get("content");
 
-        if (username == null || username.trim().isEmpty()) {
-            throw new IllegalArgumentException("Username must be provided and non-empty");
+        if (!ValidationUtils.isValidUsername(username, minUsernameLength, maxUsernameLength)) {
+            throw new IllegalArgumentException("Invalid username");
         }
-        if (content == null || content.trim().isEmpty()) {
-            throw new IllegalArgumentException("Content must be provided and non-empty");
-        }
-        if (content.length() > maxMessageLength) {
-            throw new IllegalArgumentException("Content exceeds maximum length of " + maxMessageLength);
+        if (!ValidationUtils.isValidContent(content, maxMessageLength)) {
+            throw new IllegalArgumentException("Invalid message content");
         }
         
         return chatService.saveMessage(username, content);
@@ -56,8 +60,8 @@ public class ChatController {
         }
         
         String username = payload.get("username");
-        if (username == null || username.trim().isEmpty()) {
-            throw new IllegalArgumentException("The 'username' field must be provided and non-empty");
+        if (!ValidationUtils.isValidUsername(username, minUsernameLength, maxUsernameLength)) {
+            throw new IllegalArgumentException("The 'username' field must be valid");
         }
         
         return chatService.saveMessage("System", username + " has joined the chat");
