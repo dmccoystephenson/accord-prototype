@@ -4,6 +4,12 @@ backend/.mvn/
 backend/mvnw
 backend/mvnw.cmd
 
+# Web Application - Maven
+webapp/target/
+webapp/.mvn/
+webapp/mvnw
+webapp/mvnw.cmd
+
 # Frontend - Gradle
 frontend/.gradle/
 frontend/build/
