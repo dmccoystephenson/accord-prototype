@@ -1,0 +1,51 @@
+# Backend - Maven
+backend/target/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+
+# Web Application - Maven
+webapp/target/
+webapp/.mvn/
+webapp/mvnw
+webapp/mvnw.cmd
+
+# Frontend - Gradle
+frontend/.gradle/
+frontend/build/
+frontend/*/build/
+frontend/.idea/
+frontend/*.iml
+frontend/*.ipr
+frontend/*.iws
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# H2 Database files (if using file-based)
+*.db
+*.mv.db
+*.trace.db
+
+# Environment configuration
+.env

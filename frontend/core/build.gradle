@@ -1,0 +1,10 @@
+apply plugin: "java-library"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+sourceSets.main.java.srcDirs = [ "src/" ]
+// Add assets directory to resources so they are included in the classpath
+sourceSets.main.resources.srcDirs = [ "assets/" ]
