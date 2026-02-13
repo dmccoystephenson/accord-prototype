@@ -322,8 +322,14 @@
                     let countBadge = lastMessageDiv.querySelector('.message-count');
                     if (countBadge) {
                         // Increment existing count
-                        const currentCount = parseInt(countBadge.textContent.replace('x', '')) || 2;
-                        countBadge.textContent = 'x' + (currentCount + 1);
+                        const countText = countBadge.textContent.replace('x', '');
+                        const currentCount = parseInt(countText);
+                        if (isNaN(currentCount) || currentCount < 2) {
+                            console.error('Invalid count badge value:', countBadge.textContent);
+                            countBadge.textContent = 'x2'; // Reset to minimum valid count
+                        } else {
+                            countBadge.textContent = 'x' + (currentCount + 1);
+                        }
                     } else {
                         // Add count badge for first duplicate
                         const messageHeader = lastMessageDiv.querySelector('.message-header');
