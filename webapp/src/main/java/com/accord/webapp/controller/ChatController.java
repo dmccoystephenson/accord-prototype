@@ -8,13 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ChatController {
 
-    // Server-side backend URL (used for server-to-server communication)
-    @Value("${accord.backend.url:http://localhost:8080}")
-    private String backendUrl;
-
-    @Value("${accord.backend.ws.url:http://localhost:8080/ws}")
-    private String backendWsUrl;
-
     // Client-side backend URL (used by browser JavaScript)
     // This must be accessible from the user's browser, not just from Docker network
     @Value("${accord.backend.client.url:http://localhost:8080}")
