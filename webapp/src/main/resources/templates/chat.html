@@ -312,8 +312,7 @@
             // Check if this is a consecutive duplicate message (same user and same content)
             if (lastMessage && 
                 lastMessage.username === message.username && 
-                lastMessage.content === message.content &&
-                message.username !== 'System') { // Don't group system messages
+                lastMessage.content === message.content) {
                 
                 // Find the last message div
                 const lastMessageDiv = messagesDiv.lastElementChild;

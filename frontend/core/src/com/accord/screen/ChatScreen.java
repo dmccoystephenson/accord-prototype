@@ -167,8 +167,7 @@ public class ChatScreen implements Screen {
         boolean isDuplicate = lastMessageUsername != null && 
                               lastMessageUsername.equals(msgUsername) && 
                               lastMessageContent != null && 
-                              lastMessageContent.equals(content) &&
-                              !msgUsername.equals("System"); // Don't group system messages
+                              lastMessageContent.equals(content);
         
         if (isDuplicate && !messages.isEmpty()) {
             // Update the last message with incremented count
