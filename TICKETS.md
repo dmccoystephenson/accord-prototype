@@ -257,8 +257,8 @@ Create comprehensive documentation for MVP including setup, usage, and API refer
 
 ## Phase 2: Enhanced Features - [PLANNED] PLANNED
 
-### [PLANNED] TICKET-101: Multiple Chat Rooms/Channels
-**Status:** [PLANNED] Planned  
+### [COMPLETED] TICKET-101: Multiple Chat Rooms/Channels
+**Status:** [COMPLETED]
 **Priority:** P1  
 **Component:** Backend, Frontend, Database
 
@@ -266,19 +266,19 @@ Create comprehensive documentation for MVP including setup, usage, and API refer
 Extend the application to support multiple chat rooms/channels. Users can create channels and switch between them.
 
 **Acceptance Criteria:**
-- [ ] Create Channel/Room entity (id, name, description, createdAt, createdBy)
-- [ ] Create ChannelRepository
-- [ ] Add REST endpoints for creating and listing channels
-- [ ] Modify ChatMessage to include channelId
-- [ ] Update WebSocket destinations to include channel ID (/topic/messages/{channelId})
-- [ ] Create ChannelService for channel management
-- [ ] Backend: Update message routing to channel-specific topics
-- [ ] Frontend: Add channel list UI component
-- [ ] Frontend: Add channel creation dialog
-- [ ] Frontend: Allow switching between channels
-- [ ] Frontend: Display current channel name
-- [ ] Update message history to be channel-specific
-- [ ] Test multi-channel messaging with multiple clients
+- [x] Create Channel/Room entity (id, name, description, createdAt, createdBy)
+- [x] Create ChannelRepository
+- [x] Add REST endpoints for creating and listing channels
+- [x] Modify ChatMessage to include channelId
+- [x] Update WebSocket destinations to include channel ID (/topic/messages/{channelId})
+- [x] Create ChannelService for channel management
+- [x] Backend: Update message routing to channel-specific topics
+- [x] Frontend: Add channel list UI component
+- [x] Frontend: Add channel creation dialog
+- [x] Frontend: Allow switching between channels
+- [x] Frontend: Display current channel name
+- [x] Update message history to be channel-specific
+- [x] Test multi-channel messaging with multiple clients
 
 **Estimated Effort:** 3-5 days
 
