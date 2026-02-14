@@ -345,8 +345,14 @@ This is an MVP prototype. Contributions are welcome for:
 - Feature implementations from the roadmap
 
 ## License
+This project is licensed under the **Stephenson Software Non-Commercial License (Stephenson-NC)**.  
+© 2025 Daniel McCoy Stephenson. All rights reserved.  
 
-[Stephenson-NC](https://www.github.com/Stephenson-Software/Stephenson-NC-License)
+You may use, modify, and share this software for **non-commercial purposes only**.  
+Commercial use is prohibited without explicit written permission from the copyright holder.  
+
+Full license text: [Stephenson-NC License](https://github.com/Stephenson-Software/stephenson-nc-license)  
+SPDX Identifier: `Stephenson-NC`
 
 ## Support
 
