@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     "app.username.max-length=50",
     "app.username.min-length=3",
     "app.password.min-length=8",
-    "jwt.secret=MySecretKeyForJWTTokenGenerationAndValidationMustBe256BitsOrLongerForHS256AlgorithmToWorkProperly",
+    "jwt.secret=TestSecretKeyMinimum32BytesForHS256AlgorithmCompatibility",
     "jwt.expiration=86400000"
 })
 class UserControllerTest {

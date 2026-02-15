@@ -46,7 +46,9 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
                         accessor.setUser(authentication);
                     }
                 } catch (Exception e) {
-                    logger.debug("Failed to authenticate WebSocket connection: {}", e.getMessage());
+                    // Authentication failed - connection will proceed but subsequent operations will be unauthorized
+                    // This allows the connection to be established, and authorization is checked per-message
+                    logger.warn("Failed to authenticate WebSocket connection: {}", e.getMessage());
                 }
             }
         }

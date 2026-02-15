@@ -50,7 +50,9 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/users/register", "/api/users/login").permitAll()
+                // WebSocket endpoint is public for initial handshake, but STOMP CONNECT is authenticated
                 .requestMatchers("/ws/**").permitAll()
+                // WARNING: H2 console should be disabled in production or protected with authentication
                 .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
             )
@@ -60,7 +62,7 @@ public class SecurityConfig {
             .authenticationProvider(authenticationProvider())
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        // Allow H2 console frames
+        // Allow H2 console frames - WARNING: Disable in production
         http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
 
         return http.build();

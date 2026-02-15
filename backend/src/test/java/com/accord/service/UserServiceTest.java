@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -21,6 +22,9 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UserService userService;
@@ -55,6 +59,67 @@ class UserServiceTest {
         assertEquals("testuser", result.getUsername());
         verify(userRepository, times(1)).findByUsername("testuser");
         verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void testRegisterUser_Success() {
+        String rawPassword = "Password123";
+        String encodedPassword = "$2a$10$encodedPasswordHash";
+        
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(passwordEncoder.encode(rawPassword)).thenReturn(encodedPassword);
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+            User user = invocation.getArgument(0);
+            user.setId(1L);
+            return user;
+        });
+
+        User result = userService.registerUser("newuser", rawPassword);
+
+        assertNotNull(result);
+        assertEquals("newuser", result.getUsername());
+        verify(userRepository, times(1)).existsByUsername("newuser");
+        verify(passwordEncoder, times(1)).encode(rawPassword);
+        verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void testRegisterUser_UsernameExists() {
+        when(userRepository.existsByUsername("existinguser")).thenReturn(true);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            userService.registerUser("existinguser", "Password123");
+        });
+
+        verify(userRepository, times(1)).existsByUsername("existinguser");
+        verify(passwordEncoder, never()).encode(anyString());
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void testVerifyPassword_Correct() {
+        String rawPassword = "Password123";
+        String encodedPassword = "$2a$10$encodedPasswordHash";
+        
+        when(passwordEncoder.matches(rawPassword, encodedPassword)).thenReturn(true);
+
+        boolean result = userService.verifyPassword(rawPassword, encodedPassword);
+
+        assertTrue(result);
+        verify(passwordEncoder, times(1)).matches(rawPassword, encodedPassword);
+    }
+
+    @Test
+    void testVerifyPassword_Incorrect() {
+        String rawPassword = "WrongPassword";
+        String encodedPassword = "$2a$10$encodedPasswordHash";
+        
+        when(passwordEncoder.matches(rawPassword, encodedPassword)).thenReturn(false);
+
+        boolean result = userService.verifyPassword(rawPassword, encodedPassword);
+
+        assertFalse(result);
+        verify(passwordEncoder, times(1)).matches(rawPassword, encodedPassword);
     }
 
     @Test

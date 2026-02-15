@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class JwtUtil {
     private Long expiration;
 
     private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes());
+        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     public String extractUsername(String token) {
@@ -68,6 +69,9 @@ public class JwtUtil {
 
     public Boolean validateToken(String token, String username) {
         final String extractedUsername = extractUsername(token);
+        // Note: This validation only checks token expiration and username match.
+        // It does not verify if the user still exists in the database.
+        // For enhanced security, consider implementing a token revocation mechanism.
         return (extractedUsername.equals(username) && !isTokenExpired(token));
     }
 }

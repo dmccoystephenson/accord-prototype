@@ -45,13 +45,21 @@ public class UserController {
         String username = request.getUsername();
         String password = request.getPassword();
         
+        if (username == null || username.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Username is required"));
+        }
+        
         if (!ValidationUtils.isValidUsername(username, minUsernameLength, maxUsernameLength)) {
-            return ResponseEntity.badRequest().body("Invalid username");
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid username"));
+        }
+        
+        if (password == null || password.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Password is required"));
         }
         
         if (!ValidationUtils.isValidPassword(password, minPasswordLength)) {
-            return ResponseEntity.badRequest().body("Password must be at least " + minPasswordLength + 
-                " characters and contain uppercase, lowercase, and digit");
+            return ResponseEntity.badRequest().body(Map.of("error", "Password must be at least " + minPasswordLength + 
+                " characters and contain uppercase, lowercase, and digit"));
         }
         
         try {
@@ -59,7 +67,7 @@ public class UserController {
             String token = jwtUtil.generateToken(user.getUsername());
             return ResponseEntity.ok(new AuthResponse(token, user.getUsername(), user.getId()));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
@@ -68,8 +76,8 @@ public class UserController {
         String username = request.getUsername();
         String password = request.getPassword();
         
-        if (username == null || password == null) {
-            return ResponseEntity.badRequest().body("Username and password are required");
+        if (username == null || username.trim().isEmpty() || password == null || password.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Username and password are required"));
         }
         
         try {
@@ -83,7 +91,7 @@ public class UserController {
             String token = jwtUtil.generateToken(user.getUsername());
             return ResponseEntity.ok(new AuthResponse(token, user.getUsername(), user.getId()));
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(401).body("Invalid username or password");
+            return ResponseEntity.status(401).body(Map.of("error", "Invalid username or password"));
         }
     }
 
