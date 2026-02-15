@@ -1,11 +1,18 @@
 package com.accord.controller;
 
+import com.accord.dto.AuthResponse;
+import com.accord.dto.LoginRequest;
+import com.accord.dto.RegisterRequest;
 import com.accord.model.User;
+import com.accord.security.JwtUtil;
 import com.accord.service.UserService;
 import com.accord.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -21,19 +28,63 @@ public class UserController {
     @Value("${app.username.min-length}")
     private int minUsernameLength;
 
+    @Value("${app.password.min-length}")
+    private int minPasswordLength;
+
     @Autowired
     private UserService userService;
 
-    @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody Map<String, String> request) {
-        String username = request.get("username");
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        String username = request.getUsername();
+        String password = request.getPassword();
         
         if (!ValidationUtils.isValidUsername(username, minUsernameLength, maxUsernameLength)) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("Invalid username");
         }
         
-        User user = userService.createOrGetUser(username.trim());
-        return ResponseEntity.ok(user);
+        if (!ValidationUtils.isValidPassword(password, minPasswordLength)) {
+            return ResponseEntity.badRequest().body("Password must be at least " + minPasswordLength + 
+                " characters and contain uppercase, lowercase, and digit");
+        }
+        
+        try {
+            User user = userService.registerUser(username.trim(), password);
+            String token = jwtUtil.generateToken(user.getUsername());
+            return ResponseEntity.ok(new AuthResponse(token, user.getUsername(), user.getId()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        String username = request.getUsername();
+        String password = request.getPassword();
+        
+        if (username == null || password == null) {
+            return ResponseEntity.badRequest().body("Username and password are required");
+        }
+        
+        try {
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username.trim(), password)
+            );
+            
+            User user = userService.findByUsername(username.trim())
+                    .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
+            
+            String token = jwtUtil.generateToken(user.getUsername());
+            return ResponseEntity.ok(new AuthResponse(token, user.getUsername(), user.getId()));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(401).body("Invalid username or password");
+        }
     }
 
     @GetMapping("/check/{username}")

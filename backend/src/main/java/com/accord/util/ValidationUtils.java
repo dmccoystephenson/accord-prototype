@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 public class ValidationUtils {
     
     private static final Pattern USERNAME_PATTERN = Pattern.compile("^[A-Za-z0-9_]+$");
+    private static final Pattern PASSWORD_COMPLEXITY_PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$");
     
     /**
      * Validates a username according to application rules.
@@ -27,6 +28,21 @@ public class ValidationUtils {
             return false;
         }
         return USERNAME_PATTERN.matcher(trimmed).matches();
+    }
+    
+    /**
+     * Validates a password according to security requirements.
+     * Must be at least minLength characters and contain uppercase, lowercase, and digit.
+     * 
+     * @param password the password to validate
+     * @param minLength minimum allowed length
+     * @return true if valid, false otherwise
+     */
+    public static boolean isValidPassword(String password, int minLength) {
+        if (password == null || password.length() < minLength) {
+            return false;
+        }
+        return PASSWORD_COMPLEXITY_PATTERN.matcher(password).matches();
     }
     
     /**
