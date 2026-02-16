@@ -30,6 +30,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         
+        // Note: SecurityContextHolder cleanup is handled by Spring Security's filter chain.
+        // We should NOT call SecurityContextHolder.clearContext() in a finally block here,
+        // as it would clear the context before subsequent filters execute, breaking authentication.
+        // Spring Security automatically clears the context after the request is complete.
+        
         final String authorizationHeader = request.getHeader("Authorization");
 
         String username = null;
