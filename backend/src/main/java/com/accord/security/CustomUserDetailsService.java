@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         
         // Handle users with null password (from migration phase)
         if (user.getPassword() == null) {
-            throw new UsernameNotFoundException("User " + username + " has no password set. Please register with a password.");
+            throw new UsernameNotFoundException("Password not configured for account: " + username + ". Please contact support or re-register.");
         }
         
         return new org.springframework.security.core.userdetails.User(

@@ -310,12 +310,12 @@
                                 errorMessage = errorData.error;
                             }
                         } catch (parseError) {
-                            // JSON parsing failed, use default or statusText
-                            if (response.statusText) {
-                                errorMessage = response.statusText;
-                            }
+                            // JSON parsing failed, fall back to statusText if available
                         }
-                    } else if (response.statusText) {
+                    }
+                    
+                    // Use statusText as fallback if available
+                    if (response.statusText && errorMessage === (isLoginMode ? 'Login failed' : 'Registration failed')) {
                         errorMessage = response.statusText;
                     }
                     
