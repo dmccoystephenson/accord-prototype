@@ -92,4 +92,46 @@ class ValidationUtilsTest {
         // One character
         assertTrue(ValidationUtils.isValidContent("a", 1000));
     }
+
+    @Test
+    void testValidPassword() {
+        assertTrue(ValidationUtils.isValidPassword("Password1", 8));
+        assertTrue(ValidationUtils.isValidPassword("Test123Pass", 8));
+        assertTrue(ValidationUtils.isValidPassword("MyP@ssw0rd", 8));
+        assertTrue(ValidationUtils.isValidPassword("Secure1234", 8));
+    }
+
+    @Test
+    void testInvalidPassword_Null() {
+        assertFalse(ValidationUtils.isValidPassword(null, 8));
+    }
+
+    @Test
+    void testInvalidPassword_TooShort() {
+        assertFalse(ValidationUtils.isValidPassword("Pass1", 8));
+        assertFalse(ValidationUtils.isValidPassword("Pwd1", 8));
+    }
+
+    @Test
+    void testInvalidPassword_NoUppercase() {
+        assertFalse(ValidationUtils.isValidPassword("password123", 8));
+    }
+
+    @Test
+    void testInvalidPassword_NoLowercase() {
+        assertFalse(ValidationUtils.isValidPassword("PASSWORD123", 8));
+    }
+
+    @Test
+    void testInvalidPassword_NoDigit() {
+        assertFalse(ValidationUtils.isValidPassword("Password", 8));
+    }
+
+    @Test
+    void testPassword_EdgeCases() {
+        // Exactly min length
+        assertTrue(ValidationUtils.isValidPassword("Pass1234", 8));
+        // With special characters
+        assertTrue(ValidationUtils.isValidPassword("P@ssw0rd!", 8));
+    }
 }
