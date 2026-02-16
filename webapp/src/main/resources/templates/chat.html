@@ -485,7 +485,8 @@
         let channels = []; // Store available channels
         let typingUsers = new Map(); // Map of username -> timeout ID for typing indicators
         let typingDebounceTimer = null; // Timer for debouncing typing events
-        const TYPING_DEBOUNCE_MS = 300; // Debounce typing events by 300ms
+        let isCurrentlyTyping = false; // Track if we've already sent a typing indicator
+        const TYPING_DEBOUNCE_MS = 1000; // Send typing event every 1 second while typing
         const TYPING_TIMEOUT_MS = 3000; // Clear typing indicator after 3 seconds of inactivity
 
         function connect() {
@@ -566,6 +567,7 @@
                 
                 // Clear typing indicator when message is sent
                 sendTypingIndicator(false);
+                isCurrentlyTyping = false;
                 
                 // Clear any pending debounce timer
                 if (typingDebounceTimer) {
@@ -881,20 +883,34 @@
         function onMessageInputKeyup() {
             const messageInput = document.getElementById('messageInput');
             
-            // Clear existing debounce timer
-            if (typingDebounceTimer) {
-                clearTimeout(typingDebounceTimer);
-            }
-            
             // If input is not empty, send typing indicator
             if (messageInput.value.trim().length > 0) {
-                // Debounce: only send typing event after user stops typing for a short period
-                typingDebounceTimer = setTimeout(() => {
+                // Send immediately if not already typing
+                if (!isCurrentlyTyping) {
                     sendTypingIndicator(true);
+                    isCurrentlyTyping = true;
+                }
+                
+                // Clear existing debounce timer
+                if (typingDebounceTimer) {
+                    clearTimeout(typingDebounceTimer);
+                }
+                
+                // Set timer to send another typing event if still typing
+                // This keeps the indicator alive on the other end
+                typingDebounceTimer = setTimeout(() => {
+                    if (messageInput.value.trim().length > 0) {
+                        sendTypingIndicator(true);
+                    }
                 }, TYPING_DEBOUNCE_MS);
             } else {
                 // Input is empty, immediately clear typing indicator
                 sendTypingIndicator(false);
+                isCurrentlyTyping = false;
+                if (typingDebounceTimer) {
+                    clearTimeout(typingDebounceTimer);
+                    typingDebounceTimer = null;
+                }
             }
         }
 

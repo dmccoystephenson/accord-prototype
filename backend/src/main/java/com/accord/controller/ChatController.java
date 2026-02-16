@@ -7,6 +7,7 @@ import com.accord.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -65,7 +66,7 @@ public class ChatController {
 
     @MessageMapping("/chat.send/{channelId}")
     @SendTo("/topic/messages/{channelId}")
-    public ChatMessage sendMessageToChannel(@org.springframework.messaging.handler.annotation.DestinationVariable Long channelId, 
+    public ChatMessage sendMessageToChannel(@DestinationVariable Long channelId, 
                                            Map<String, String> payload) {
         if (payload == null) {
             throw new IllegalArgumentException("Payload must not be null");
@@ -116,7 +117,7 @@ public class ChatController {
 
     @MessageMapping("/chat.join/{channelId}")
     @SendTo("/topic/messages/{channelId}")
-    public ChatMessage userJoinChannel(@org.springframework.messaging.handler.annotation.DestinationVariable Long channelId,
+    public ChatMessage userJoinChannel(@DestinationVariable Long channelId,
                                       Map<String, String> payload) {
         if (payload == null) {
             throw new IllegalArgumentException("Payload must not be null");
@@ -139,7 +140,7 @@ public class ChatController {
 
     @MessageMapping("/chat.typing/{channelId}")
     @SendTo("/topic/typing/{channelId}")
-    public TypingIndicator userTyping(@org.springframework.messaging.handler.annotation.DestinationVariable Long channelId,
+    public TypingIndicator userTyping(@DestinationVariable Long channelId,
                                      Map<String, Object> payload) {
         if (payload == null) {
             throw new IllegalArgumentException("Payload must not be null");
