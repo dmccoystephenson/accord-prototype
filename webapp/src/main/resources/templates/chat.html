@@ -727,6 +727,9 @@
             lastMessage = null;
             historyLoaded = false;
             messageQueue = [];
+            
+            // Clear all typing indicator timeouts before clearing the map
+            typingUsers.forEach(timeoutId => clearTimeout(timeoutId));
             typingUsers.clear();
             
             // Subscribe to new channel
@@ -889,6 +892,9 @@
                 typingDebounceTimer = setTimeout(() => {
                     sendTypingIndicator(true);
                 }, TYPING_DEBOUNCE_MS);
+            } else {
+                // Input is empty, immediately clear typing indicator
+                sendTypingIndicator(false);
             }
         }
 
