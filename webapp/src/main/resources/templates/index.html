@@ -299,8 +299,26 @@
                     // Redirect to chat
                     window.location.href = '/chat';
                 } else {
-                    const errorData = await response.json();
-                    const errorMessage = errorData.error || (isLoginMode ? 'Login failed' : 'Registration failed');
+                    // Handle error responses - check if response is JSON
+                    let errorMessage = isLoginMode ? 'Login failed' : 'Registration failed';
+                    const contentType = response.headers.get('content-type') || '';
+                    
+                    if (contentType.includes('application/json')) {
+                        try {
+                            const errorData = await response.json();
+                            if (errorData && errorData.error) {
+                                errorMessage = errorData.error;
+                            }
+                        } catch (parseError) {
+                            // JSON parsing failed, use default or statusText
+                            if (response.statusText) {
+                                errorMessage = response.statusText;
+                            }
+                        }
+                    } else if (response.statusText) {
+                        errorMessage = response.statusText;
+                    }
+                    
                     showError(passwordError, errorMessage);
                     submitBtn.disabled = false;
                     submitBtn.textContent = isLoginMode ? 'Login' : 'Register';

@@ -113,13 +113,14 @@ class SecurityConfigIntegrationTest {
     }
 
     @Test
-    void protectedEndpoints_shouldReject_expiredJwtToken() throws Exception {
-        // This is a pre-generated expired token (expired in 2020)
-        String expiredToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImV4cCI6MTU3NzgzNjgwMH0.abcdefghijklmnopqrstuvwxyz";
+    void protectedEndpoints_shouldReject_invalidOrExpiredJwtToken() throws Exception {
+        // This token has an invalid signature for the test secret
+        // In practice, both invalid signatures and expired tokens will be rejected by JWT validation
+        String invalidToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImV4cCI6MTU3NzgzNjgwMH0.abcdefghijklmnopqrstuvwxyz";
 
-        // Should reject expired token
+        // Should reject invalid or expired token
         mockMvc.perform(get("/api/messages")
-                .header("Authorization", "Bearer " + expiredToken))
+                .header("Authorization", "Bearer " + invalidToken))
                 .andExpect(status().isForbidden());
     }
 
