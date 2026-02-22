@@ -14,6 +14,10 @@ public class User {
     @Column(unique = true, nullable = false, length = 50)
     private String username;
 
+    // Password is nullable to support migration from username-only authentication
+    @Column(nullable = true)
+    private String password;
+
     @Column(nullable = false)
     private LocalDateTime joinedAt;
 
@@ -41,6 +45,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public LocalDateTime getJoinedAt() {

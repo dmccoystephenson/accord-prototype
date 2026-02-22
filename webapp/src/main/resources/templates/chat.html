@@ -15,8 +15,9 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             height: 100vh;
             overflow: hidden;
-            background: #f5f5f5;
+            background: #36393f;
             display: flex;
+            color: #dcddde;
         }
 
         .sidebar {
@@ -58,7 +59,7 @@
         }
 
         .channel-item.active {
-            background: #5865f2;
+            background: #2563eb;
             color: white;
         }
 
@@ -71,7 +72,7 @@
         .add-channel-btn {
             margin: 8px;
             padding: 10px;
-            background: #5865f2;
+            background: #2563eb;
             color: white;
             border: none;
             border-radius: 4px;
@@ -81,7 +82,7 @@
         }
 
         .add-channel-btn:hover {
-            background: #4752c4;
+            background: #1d4ed8;
         }
 
         .chat-container {
@@ -92,18 +93,20 @@
         }
 
         .chat-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #2f3136;
+            color: #dcddde;
             padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid #202225;
         }
 
         .chat-header h1 {
             font-size: 1.5em;
             font-weight: 600;
+            color: white;
         }
 
         .channel-name {
@@ -123,12 +126,12 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: #4caf50;
+            background: #43b581;
             animation: pulse 2s infinite;
         }
 
         .status-indicator.disconnected {
-            background: #e74c3c;
+            background: #ed4245;
             animation: none;
         }
 
@@ -141,15 +144,15 @@
             flex: 1;
             overflow-y: auto;
             padding: 20px;
-            background: white;
+            background: #36393f;
         }
 
         .message {
             margin-bottom: 16px;
             padding: 12px 16px;
             border-radius: 8px;
-            background: #f9f9f9;
-            border-left: 3px solid #667eea;
+            background: #32353b;
+            border-left: 3px solid #2563eb;
             animation: slideIn 0.3s ease-out;
         }
 
@@ -165,8 +168,8 @@
         }
 
         .message.system {
-            background: #fff3cd;
-            border-left-color: #ffc107;
+            background: #3a3520;
+            border-left-color: #faa61a;
             font-style: italic;
         }
 
@@ -178,15 +181,15 @@
 
         .message-username {
             font-weight: 600;
-            color: #667eea;
+            color: #3b82f6;
         }
 
         .message-time {
             font-size: 0.85em;
-            color: #999;
+            color: #72767d;
             cursor: help;
         }
-        
+
         .message-time:focus {
             outline: 2px solid #667eea;
             outline-offset: 2px;
@@ -229,13 +232,13 @@
         }
 
         .message-content {
-            color: #333;
+            color: #dcddde;
             word-wrap: break-word;
         }
 
         .message-count {
             display: inline-block;
-            background: #667eea;
+            background: #2563eb;
             color: white;
             font-size: 0.75em;
             font-weight: 600;
@@ -246,11 +249,44 @@
             text-align: center;
         }
 
+        .typing-indicator {
+            padding: 12px 20px;
+            color: #b9bbbe;
+            font-size: 0.9em;
+            font-style: italic;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .typing-indicator .dots {
+            display: inline-block;
+            margin-left: 4px;
+        }
+
+        .typing-indicator .dots span {
+            animation: blink 1.4s infinite both;
+            display: inline-block;
+        }
+
+        .typing-indicator .dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator .dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes blink {
+            0%, 80%, 100% { opacity: 0; }
+            40% { opacity: 1; }
+        }
+
         .input-container {
-            background: white;
+            background: #2f3136;
             padding: 20px;
-            border-top: 1px solid #e0e0e0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            border-top: 1px solid #202225;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
         }
 
         .input-form {
@@ -261,32 +297,39 @@
         .input-form input {
             flex: 1;
             padding: 14px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #202225;
             border-radius: 8px;
             font-size: 15px;
             transition: border-color 0.3s;
+            background: #40444b;
+            color: #dcddde;
+        }
+
+        .input-form input::placeholder {
+            color: #72767d;
         }
 
         .input-form input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #2563eb;
         }
 
         .input-form button {
             padding: 14px 28px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #2563eb;
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
         }
 
         .input-form button:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            background: #1d4ed8;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
         }
 
         .input-form button:disabled {
@@ -295,9 +338,9 @@
         }
 
         .logout-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid white;
+            background: rgba(255, 255, 255, 0.1);
+            color: #dcddde;
+            border: 1px solid #72767d;
             padding: 8px 16px;
             border-radius: 6px;
             cursor: pointer;
@@ -305,7 +348,7 @@
         }
 
         .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         /* Modal styles */
@@ -327,7 +370,7 @@
         }
 
         .modal-content {
-            background: white;
+            background: #36393f;
             padding: 30px;
             border-radius: 8px;
             max-width: 400px;
@@ -337,7 +380,7 @@
         .modal-content h2 {
             margin-top: 0;
             margin-bottom: 20px;
-            color: #333;
+            color: #dcddde;
         }
 
         .modal-content input,
@@ -345,10 +388,17 @@
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #202225;
             border-radius: 4px;
             font-size: 14px;
             box-sizing: border-box;
+            background: #40444b;
+            color: #dcddde;
+        }
+
+        .modal-content input::placeholder,
+        .modal-content textarea::placeholder {
+            color: #72767d;
         }
 
         .modal-content textarea {
@@ -371,21 +421,21 @@
         }
 
         .modal-buttons .btn-primary {
-            background: #5865f2;
+            background: #2563eb;
             color: white;
         }
 
         .modal-buttons .btn-primary:hover {
-            background: #4752c4;
+            background: #1d4ed8;
         }
 
         .modal-buttons .btn-secondary {
-            background: #e0e0e0;
-            color: #333;
+            background: #4f545c;
+            color: #dcddde;
         }
 
         .modal-buttons .btn-secondary:hover {
-            background: #d0d0d0;
+            background: #5d6269;
         }
     </style>
 </head>
@@ -417,6 +467,8 @@
         </div>
 
         <div class="messages-container" id="messages"></div>
+
+        <div class="typing-indicator" id="typingIndicator"></div>
 
         <div class="input-container">
             <form class="input-form" id="messageForm">
@@ -456,9 +508,10 @@
         const backendWsUrl = /*[[${backendWsUrl}]]*/ 'http://localhost:8080/ws';
         const backendUrl = /*[[${backendUrl}]]*/ 'http://localhost:8080';
         
-        // Check if user is logged in
+        // Check if user is logged in with JWT token
         const username = sessionStorage.getItem('username');
-        if (!username) {
+        const jwtToken = sessionStorage.getItem('jwtToken');
+        if (!username || !jwtToken) {
             window.location.href = '/';
         }
 
@@ -471,7 +524,13 @@
         let messageQueue = []; // Buffer for messages received during history loading
         let currentChannelId = null; // Will be set from loaded channels
         let currentSubscription = null; // Track current channel subscription
+        let typingSubscription = null; // Track typing indicator subscription
         let channels = []; // Store available channels
+        let typingUsers = new Map(); // Map of username -> timeout ID for typing indicators
+        let typingDebounceTimer = null; // Timer for debouncing typing events
+        let isCurrentlyTyping = false; // Track if we've already sent a typing indicator
+        const TYPING_DEBOUNCE_MS = 2000; // Send typing event every 2 seconds while typing
+        const TYPING_TIMEOUT_MS = 3000; // Clear typing indicator after 3 seconds of inactivity
 
         // Timestamp utilities
         function getRelativeTime(timestamp) {
@@ -491,12 +550,12 @@
             if (diffHour < 24) return `${diffHour} hours ago`;
             if (diffDay === 1) return 'Yesterday';
             if (diffDay < 7) return `${diffDay} days ago`;
-            
+
             // For older messages, show date
-            return messageDate.toLocaleDateString(undefined, { 
-                year: 'numeric', 
-                month: 'short', 
-                day: 'numeric' 
+            return messageDate.toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
             });
         }
 
@@ -560,7 +619,12 @@
             const socket = new SockJS(backendWsUrl);
             stompClient = Stomp.over(socket);
             
-            stompClient.connect({}, onConnected, onError);
+            // Include JWT token in STOMP connection headers
+            const headers = {
+                'Authorization': `Bearer ${jwtToken}`
+            };
+
+            stompClient.connect(headers, onConnected, onError);
         }
 
         async function onConnected() {
@@ -631,6 +695,16 @@
                 
                 stompClient.send(`/app/chat.send/${currentChannelId}`, {}, JSON.stringify(chatMessage));
                 messageInput.value = '';
+
+                // Clear typing indicator when message is sent
+                sendTypingIndicator(false);
+                isCurrentlyTyping = false;
+
+                // Clear any pending debounce timer
+                if (typingDebounceTimer) {
+                    clearTimeout(typingDebounceTimer);
+                    typingDebounceTimer = null;
+                }
             }
         }
 
@@ -647,7 +721,7 @@
                 while (lastMessageDiv && lastMessageDiv.classList.contains('date-separator')) {
                     lastMessageDiv = lastMessageDiv.previousElementSibling;
                 }
-                
+
                 if (lastMessageDiv && lastMessageDiv.classList && lastMessageDiv.classList.contains('message')) {
                     // Increment count in our tracker (always starts at 1, so just increment)
                     lastMessage.count = lastMessage.count + 1;
@@ -686,19 +760,19 @@
             const previousMessages = messagesDiv.querySelectorAll('.message');
             const previousMessage = previousMessages.length > 0 ? previousMessages[previousMessages.length - 1] : null;
             const previousTimestamp = previousMessage ? previousMessage.getAttribute('data-timestamp') : null;
-            
+
             if (shouldShowDateSeparator(message.timestamp, previousTimestamp)) {
                 const dateSeparator = document.createElement('div');
                 dateSeparator.className = 'date-separator';
                 dateSeparator.innerHTML = `<span>${getDateSeparatorText(message.timestamp)}</span>`;
                 messagesDiv.appendChild(dateSeparator);
             }
-            
+
             // Create new message div
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message';
             messageDiv.setAttribute('data-timestamp', message.timestamp);
-            
+
             if (message.username === 'System') {
                 messageDiv.classList.add('system');
             }
@@ -727,10 +801,17 @@
 
         async function loadRecentMessages() {
             try {
-                const response = await fetch(`${backendUrl}/api/messages?limit=50&channelId=${currentChannelId}`);
+                const response = await fetch(`${backendUrl}/api/messages?limit=50&channelId=${currentChannelId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`
+                    }
+                });
                 if (response.ok) {
                     const messages = await response.json();
                     messages.forEach(message => displayMessage(message));
+                } else if (response.status === 401 || response.status === 403) {
+                    // Token expired or invalid, redirect to login
+                    handleAuthError();
                 }
             } catch (error) {
                 console.error('Error loading messages:', error);
@@ -744,10 +825,17 @@
 
         async function loadChannels() {
             try {
-                const response = await fetch(`${backendUrl}/api/channels`);
+                const response = await fetch(`${backendUrl}/api/channels`, {
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`
+                    }
+                });
                 if (response.ok) {
                     channels = await response.json();
                     displayChannels();
+                } else if (response.status === 401 || response.status === 403) {
+                    // Token expired or invalid, redirect to login
+                    handleAuthError();
                 }
             } catch (error) {
                 console.error('Error loading channels:', error);
@@ -775,9 +863,13 @@
             if (currentSubscription) {
                 currentSubscription.unsubscribe();
             }
-            
-            // Subscribe to new channel
+            if (typingSubscription) {
+                typingSubscription.unsubscribe();
+            }
+
+            // Subscribe to new channel messages and typing indicators
             currentSubscription = stompClient.subscribe(`/topic/messages/${channelId}`, onMessageReceived);
+            typingSubscription = stompClient.subscribe(`/topic/typing/${channelId}`, onTypingReceived);
         }
 
         async function switchChannel(channelId, channelName) {
@@ -787,12 +879,24 @@
             currentChannelId = channelId;
             document.getElementById('currentChannelName').textContent = channelName;
             
-            // Clear messages
+            // Clear messages and typing indicators
             document.getElementById('messages').innerHTML = '';
+            document.getElementById('typingIndicator').innerHTML = '';
             lastMessage = null;
             historyLoaded = false;
             messageQueue = [];
             
+            // Reset current user's typing state and clear debounce timer
+            isCurrentlyTyping = false;
+            if (typingDebounceTimer) {
+                clearTimeout(typingDebounceTimer);
+                typingDebounceTimer = null;
+            }
+
+            // Clear all typing indicator timeouts before clearing the map
+            typingUsers.forEach(timeoutId => clearTimeout(timeoutId));
+            typingUsers.clear();
+
             // Subscribe to new channel
             subscribeToChannel(channelId);
             
@@ -827,7 +931,8 @@
                 const response = await fetch(`${backendUrl}/api/channels`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
                     },
                     body: JSON.stringify({
                         name: name,
@@ -845,6 +950,9 @@
                     
                     // Switch to new channel
                     switchChannel(newChannel.id, newChannel.name);
+                } else if (response.status === 401 || response.status === 403) {
+                    // Token expired or invalid, redirect to login
+                    handleAuthError();
                 } else {
                     const error = await response.json();
                     alert(error.error || 'Failed to create channel');
@@ -853,6 +961,13 @@
                 console.error('Error creating channel:', error);
                 alert('Failed to create channel');
             }
+        }
+
+        function handleAuthError() {
+            // Clear session and redirect to login
+            sessionStorage.clear();
+            alert('Your session has expired. Please log in again.');
+            window.location.href = '/';
         }
 
         function updateStatus(isConnected) {
@@ -873,6 +988,8 @@
                 stompClient.disconnect();
             }
             sessionStorage.removeItem('username');
+            sessionStorage.removeItem('jwtToken');
+            sessionStorage.removeItem('userId');
             window.location.href = '/';
         }
 
@@ -882,9 +999,102 @@
             return div.innerHTML;
         }
 
+        function onTypingReceived(payload) {
+            const typingIndicator = JSON.parse(payload.body);
+
+            // Don't show typing indicator for the current user
+            if (typingIndicator.username === username) {
+                return;
+            }
+
+            if (typingIndicator.typing) {
+                // User started typing
+                // Clear any existing timeout for this user
+                if (typingUsers.has(typingIndicator.username)) {
+                    clearTimeout(typingUsers.get(typingIndicator.username));
+                }
+
+                // Set a new timeout to clear this user's typing indicator
+                const timeoutId = setTimeout(() => {
+                    typingUsers.delete(typingIndicator.username);
+                    updateTypingDisplay();
+                }, TYPING_TIMEOUT_MS);
+
+                typingUsers.set(typingIndicator.username, timeoutId);
+                updateTypingDisplay();
+            } else {
+                // User stopped typing
+                if (typingUsers.has(typingIndicator.username)) {
+                    clearTimeout(typingUsers.get(typingIndicator.username));
+                    typingUsers.delete(typingIndicator.username);
+                    updateTypingDisplay();
+                }
+            }
+        }
+
+        function updateTypingDisplay() {
+            const typingDiv = document.getElementById('typingIndicator');
+            const typingUsernames = Array.from(typingUsers.keys());
+
+            if (typingUsernames.length === 0) {
+                typingDiv.innerHTML = '';
+            } else if (typingUsernames.length === 1) {
+                typingDiv.innerHTML = `<strong>${escapeHtml(typingUsernames[0])}</strong> is typing <span class="dots"><span>.</span><span>.</span><span>.</span></span>`;
+            } else if (typingUsernames.length === 2) {
+                typingDiv.innerHTML = `<strong>${escapeHtml(typingUsernames[0])}</strong> and <strong>${escapeHtml(typingUsernames[1])}</strong> are typing <span class="dots"><span>.</span><span>.</span><span>.</span></span>`;
+            } else {
+                typingDiv.innerHTML = `<strong>${escapeHtml(typingUsernames[0])}</strong>, <strong>${escapeHtml(typingUsernames[1])}</strong>, and ${typingUsernames.length - 2} others are typing <span class="dots"><span>.</span><span>.</span><span>.</span></span>`;
+            }
+        }
+
+        function sendTypingIndicator(isTyping) {
+            if (stompClient && connected && currentChannelId) {
+                stompClient.send(`/app/chat.typing/${currentChannelId}`, {}, JSON.stringify({
+                    username: username,
+                    typing: isTyping
+                }));
+            }
+        }
+
+        function onMessageInputKeyup() {
+            const messageInput = document.getElementById('messageInput');
+
+            // If input is not empty, send typing indicator
+            if (messageInput.value.trim().length > 0) {
+                // Send immediately if not already typing
+                if (!isCurrentlyTyping) {
+                    sendTypingIndicator(true);
+                    isCurrentlyTyping = true;
+                }
+
+                // Clear existing debounce timer
+                if (typingDebounceTimer) {
+                    clearTimeout(typingDebounceTimer);
+                }
+
+                // Set timer to send another typing event if still typing
+                // This keeps the indicator alive on the other end
+                typingDebounceTimer = setTimeout(() => {
+                    // Re-check input length in case user cleared it during the timeout
+                    if (messageInput.value.trim().length > 0) {
+                        sendTypingIndicator(true);
+                    }
+                }, TYPING_DEBOUNCE_MS);
+            } else {
+                // Input is empty, immediately clear typing indicator
+                sendTypingIndicator(false);
+                isCurrentlyTyping = false;
+                if (typingDebounceTimer) {
+                    clearTimeout(typingDebounceTimer);
+                    typingDebounceTimer = null;
+                }
+            }
+        }
+
         // Event listeners
         document.getElementById('messageForm').addEventListener('submit', sendMessage);
         document.getElementById('createChannelForm').addEventListener('submit', createChannel);
+        document.getElementById('messageInput').addEventListener('keyup', onMessageInputKeyup);
 
         // Connect on page load
         connect();
